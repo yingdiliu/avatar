@@ -25,18 +25,31 @@ session = 'charlotte';
 %ONLY LOAD USEFUL DATA
 format long g 
 data_file = [ session '_data'];
-data_variables = {'eyedata' , 'sr' , 'trialSamples'};
+data_variables = {'eyedata' , 'sr' , 'trialSamples' , 'fixationTrials'};
 load(data_file , data_variables{:})% or charlotte_data 
+samplerate = sr(1);
+rawData =  eyedata(:,[9 3 4 5 6]);
 
-%Detect blinks in a simple way
+
+%Detect blinks
 pupils = eyedata(:,[7 8]);
-blinks = zeros(length(eyedata),1); 
-blinks(pupils(:,1)==0)=1;
+left_blinks = getBlinks( pupils(:,1) , samplerate );
+right_blinks = getBlinks( pupils(:,2) , samplerate );
+%blinks(pupils(:,1)==0)=1; 
+blinks = left_blinks | right_blinks;
+
+% remove false data 
+falseIdx = cleanFalseData( rawData , samplerate );
+
+falseIdx = blinks | falseIdx;
+
+%Get Real Trials 
+realTrials = trialSamples( fixationTrials , :)
 
 
 % Create recording And Save It
 %Create( folder, session, samples, blinkYesNo, samplerate, trials, importInfo )
-recording = ClusterDetection.EyeMovRecording.Create(folder, session , eyedata(:,[9 3 4 5 6]) , blinks , sr(1), trialSamples);
+recording = ClusterDetection.EyeMovRecording.Create(folder, session , rawData , falseIdx ,samplerate, trialSamples);
 
 % Runs the saccade detection
 [saccades stats] = recording.FindSaccades();
