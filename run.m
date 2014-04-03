@@ -30,8 +30,8 @@ load(data_file , data_variables{:})% or charlotte_data
 samplerate = sr(1);
 rawData =  eyedata(:,[9 3 4 5 6]);
 DPP = visAngPerPixel(52.2457, 70, 1920);
-rawData = rawData * DPP;
-
+rawData(:,[2 3 4 5]) = rawData(:,[2 3 4 5]) * DPP;
+rawData(:,1) = rawData(:,1) * 1000;
 
 %Detect blinks
 pupils = eyedata(:,[7 8]);
@@ -46,7 +46,7 @@ falseIdx = cleanFalseData( rawData , samplerate );
 falseIdx = blinks | falseIdx;
 
 %Get Real Trials 
-realTrials = trialSamples( fixationTrials , :)
+realTrials = trialSamples( fixationTrials , :);
 
 
 % Create recording And Save It

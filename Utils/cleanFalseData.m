@@ -20,7 +20,5 @@ function falseIdx = cleanFalseData( rawData ,samplerate )
         % before blinks 
         % after blinks, be careful of exceeds matrix demensions
     end
-
-
 end
 

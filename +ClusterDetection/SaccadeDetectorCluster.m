@@ -149,7 +149,8 @@ classdef SaccadeDetectorCluster < ClusterDetection.SaccadeDetector
                 
                 % if the peak is not the highest point within the
                 % neighborhood discard it
-                if ( ~(any(p < data(endL:endR)) ))
+                %if ( ~(any(p < data(endL:endR)) ))
+                if ( ~(any(p < data(round(endL):round(endR))) ))
                     peakidx(i) = allpeaks(pi);
                     peakvalues(i) = allpeaksvalues(pi);
                     % if the peak is good discard other peaks within the

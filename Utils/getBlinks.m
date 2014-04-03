@@ -1,10 +1,8 @@
-function blinks = getBlinks( pupils, samplerate)
+function blinks = getBlinks( pupil, samplerate)
 %REMOVEBLINKS Summary of this function goes here
 %   Detailed explanation goes here
-    
-    %pupils = eyedata(ss,[7 8]);
-    blinks = zeros(size(pupils),1); 
-    blinks(pupils==0)=1;
+    blinks = zeros(size(pupil,1),1); 
+    blinks(pupil==0)=1;
     % remove samples +-200ms around blinks. 
     cutBlink = round(samplerate/1000*200); % number of samples 
     % starting and ending sample of each blink 
