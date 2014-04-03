@@ -1,5 +1,9 @@
 function falseIdx = cleanFalseData( rawData ,samplerate )
-%CLEANFALSEDATA Summary of this function goes here
+% apart from obvious blink data(pupil size=0) and neighboring samples, we
+% also want to remove those samples where pupil size change very abruptly
+% (20 unit/sample, see J.otero-millan 2014 JOV paper). 
+
+
 %   Detailed explanation goes here
     falseIdx = zeros( length(rawData(:,1)) , 1);
     % remove samples +-200ms around blinks. 
