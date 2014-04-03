@@ -17,6 +17,13 @@ if ( isempty( folder) )
     folder = pwd;
 end
 
+% make sure that the pwd is avatar not the +ClusterDetection..to avoid
+% warning about non-existent data folder 
+if strcmp(folder(end-5:end),'avatar') == 0
+   display('warning: make sure your current directory')
+end
+
+
 folder = [folder '/data'];
 subjNames = {'monica','charlotte'}; % TODO: to be added
 for subjnum = 1:length(subjNames)
@@ -53,7 +60,7 @@ for subjnum = 1:length(subjNames)
     
     
     % Create recording And Save It
-    %Create( folder, session, samples, blinkYesNo, samplerate, trials, importInfo )
+    % Create( folder, session, samples, blinkYesNo, samplerate, trials, importInfo )
     recording = ClusterDetection.EyeMovRecording.Create(folder, session , rawData , falseIdx ,samplerate, trialSamples);
     
     % Runs the saccade detection
