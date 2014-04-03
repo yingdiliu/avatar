@@ -29,6 +29,8 @@ data_variables = {'eyedata' , 'sr' , 'trialSamples' , 'fixationTrials'};
 load(data_file , data_variables{:})% or charlotte_data 
 samplerate = sr(1);
 rawData =  eyedata(:,[9 3 4 5 6]);
+DPP = visAngPerPixel(52.2457, 70, 1920);
+rawData = rawData * DPP;
 
 
 %Detect blinks
