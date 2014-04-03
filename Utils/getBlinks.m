@@ -8,7 +8,7 @@ function blinks = getBlinks( pupils, samplerate)
     % remove samples +-200ms around blinks. 
     cutBlink = round(samplerate/1000*200); % number of samples 
     % starting and ending sample of each blink 
-    blinkStartEnd = [find(diff(blinks)==1)+1 [find(diff(blinks)==-1)+1;size(blinks,1)]];
+    blinkStartEnd = [find(diff(blinks)==1)+1 find(diff(blinks)==-1)+1];
     for bb = 1: size(blinkStartEnd,1)
         % before blinks 
         blinks(blinkStartEnd(bb,1)-cutBlink:blinkStartEnd(bb,1))=1;
