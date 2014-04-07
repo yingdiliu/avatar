@@ -45,8 +45,16 @@ classdef EyeMovRecording < ClusterDetection.DataDB
         time % timestamps of the recording
         
         position % position data
+        
+        posAvg 
+        
         velocity % velocity data
+        
+        AvgVelocity
+        
         acceleration % acceleration data
+        
+        AvgAcceleration
         
         valid % flags for each sample, 1 valid recording, 0 not valid (out of trial or falseIdx)
         
@@ -85,7 +93,7 @@ classdef EyeMovRecording < ClusterDetection.DataDB
             velocity(:,[this.LP this.RP]) = this.CartToPolar( velocity(:,[this.LH this.RH]), velocity(:,[this.LV this.RV]) );
         end
         
-        function v = getAvgPolarVelocityAcrossEyes( this )
+        function AvgVelocity = get.AvgVelocity( this )
             pos = this.position;
             if ( this.hasLeftEye && this.hasRightEye )
                 posh = mean([pos(:,this.LH ),pos(:,this.RH)],2);
@@ -98,7 +106,7 @@ classdef EyeMovRecording < ClusterDetection.DataDB
             end
             
             vel = this.Differenciate( pos, this.samplerate );
-            v = this.CartToPolar( vel(:,1), vel(:,2) );
+            AvgVelocity = this.CartToPolar( vel(:,1), vel(:,2) );
         end
         
         function acceleration = get.acceleration(this)
@@ -108,14 +116,14 @@ classdef EyeMovRecording < ClusterDetection.DataDB
             acceleration(:,[this.LP this.RP]) = this.CartToPolar( acceleration(:,[this.LH this.RH]), acceleration(:,[this.LV this.RV]) );
         end
         
-        function a = getAvgPolarAccelerationAcrossEyes( this )
+        function AvgAcceleration = get.AvgAcceleration( this )
             acceleration = this.acceleration;
             if ( this.hasLeftEye && this.hasRightEye )
-                a = mean([acceleration(:,this.LP),acceleration(:,this.RP)],2);
+                AvgAcceleration = mean([acceleration(:,this.LP),acceleration(:,this.RP)],2);
             elseif ( this.hasLeftEye )
-                a = acceleration(:,this.LP);
+                AvgAcceleration = acceleration(:,this.LP);
             elseif ( this.hasRightEye )
-                a = acceleration(:,this.RP);
+                AvgAcceleration = acceleration(:,this.RP);
             end
         end
         
