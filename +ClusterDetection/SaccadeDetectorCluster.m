@@ -103,7 +103,7 @@ classdef SaccadeDetectorCluster < ClusterDetection.SaccadeDetector
             
             this.MINIPI = 20*eyeRecording.samplerate/1000; % minimum inter peak interval
                         
-            vel = eyeRecording.getAvgPolarVelocityAcrossEyes();
+            vel = eyeRecording.getAvgPolarVelocityAcrossEyes(); 
             valid = eyeRecording.valid;
 
             peaksIdx = [];
@@ -117,6 +117,9 @@ classdef SaccadeDetectorCluster < ClusterDetection.SaccadeDetector
                 nsamples = length(idxtrial);
                 
                 % determine the number of peaks for this chunk
+                % first you calculate the duration of this chunk
+                % (sececonds), then you divide it by 5 (number of peaks per
+                % second). 
                 npeaks = ceil((nsamples-sum(~valid(idxtrial)))/eyeRecording.samplerate*this.RATEOFPEAKS);
                 if ( npeaks ==0)
                     continue

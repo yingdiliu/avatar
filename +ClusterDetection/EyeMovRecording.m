@@ -32,8 +32,8 @@ classdef EyeMovRecording < ClusterDetection.DataDB
     end
     
     properties % stored in the object (memory) SMALL VARIABLES
-        samplerate % samples per second
-        nsamples % total number of samples
+        samplerate % rawData per second
+        nsamples % total number of rawData
         
         hasLeftEye
         hasRightEye
@@ -58,13 +58,13 @@ classdef EyeMovRecording < ClusterDetection.DataDB
     methods
         
         function time = get.time(this)
-            samples = this.ReadVariable('samples');
-            time = samples(:,1);
+            rawData = this.ReadVariable('rawData');
+            time = rawData(:,1);
         end
         
         function position = get.position(this)
-            samples = this.ReadVariable('samples');
-            position = samples(:,2:5);
+            rawData = this.ReadVariable('rawData');
+            position = rawData(:,2:5);
         end
         
         function posAvg = getAvgPositionAcrossEyes( this )
@@ -123,7 +123,7 @@ classdef EyeMovRecording < ClusterDetection.DataDB
             falseIdx = this.ReadVariable('falseIdx');
             trialYesNo = this.CreateYesNo( this.trials(:,this.TRIALSTART), this.trials(:,this.TRIALSTOP), size(falseIdx,1) );
             
-            % valid samples are samples within a trial and not in a blink
+            % valid rawData are rawData within a trial and not in a blink
             valid = ~falseIdx & trialYesNo;
             
             % remove chunks of valid data that are too short 
@@ -211,7 +211,7 @@ classdef EyeMovRecording < ClusterDetection.DataDB
         end
         
         % Experiment object factory from simple variables
-        function recording = Create( folder, session, samples, falseIdx, samplerate, trialsInfo, importInfo )
+        function recording = Create( folder, session, rawData, falseIdx, samplerate, trialSamples, importInfo )
             try
                 
                 recording = ClusterDetection.EyeMovRecording();
@@ -221,20 +221,20 @@ classdef EyeMovRecording < ClusterDetection.DataDB
                     info.import = importInfo;
                 end
                 
-                info.nSamples = size(samples,1);
+                info.nSamples = size(rawData,1);
                 info.samplerate = samplerate;
                 recording.samplerate = info.samplerate;
                 
-                info.hasLeftEye = (sum(~isnan( samples(:,2) )) > 0); %TODO more ways to determine if eyes are present ...
-                info.hasRightEye = (sum(~isnan( samples(:,4) )) > 0);
+                info.hasLeftEye = (sum(~isnan( rawData(:,2) )) > 0); %TODO more ways to determine if eyes are present ...
+                info.hasRightEye = (sum(~isnan( rawData(:,4) )) > 0);
                 
-                recording.WriteVariable( samples, 'samples');
+                recording.WriteVariable( rawData, 'rawData');
                 
                 % save data in DB in new session
                 recording.WriteVariable( falseIdx, 'falseIdx');
                 
-                if ( exist( 'trialsInfo', 'var')  )
-                    info.trials = trialsInfo;
+                if ( exist( 'trialSamples', 'var')  )
+                    info.trials = trialSamples;
                 else 
                     info.trials = recording.GetTrials( );
                 end 
